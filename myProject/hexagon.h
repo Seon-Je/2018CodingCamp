@@ -17,6 +17,8 @@ int hexagon_main(int argc, FAR char *argv[]);
 int hexagon_led_main(int argc, FAR char *argv[]);
 int hexagon_switch_main(int argc, FAR char *argv[]);
 int hexagon_light_main(int argc, FAR char *argv[]);
+int hexagon_ir_main(int argc, FAR char *argv[]);
+int hexagon_temp_main(int argc, FAR char *argv[]);
 int hexagon_buzzer_main(int argc, FAR char *argv[]);
 
 
