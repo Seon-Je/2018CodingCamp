@@ -19,7 +19,7 @@
 int main(int argc, FAR char *argv[])
 {
 	tash_cmd_install("hexagon",hexagon_main,TASH_EXECMD_SYNC);
-	tash_cmd_install("game", game_main, TASH_EXECMD_SYNC);
+//	tash_cmd_install("game", game_main, TASH_EXECMD_SYNC);
 	return 0;
 }
 
