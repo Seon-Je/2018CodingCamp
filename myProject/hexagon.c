@@ -4,8 +4,8 @@
 *
 * Filename: hexagon.c
 * Author: sj.yang
-* Release date: 2018/07/06
-* Version: 1.0
+* Release date: 2018/08/20
+* Version: 1.1
 *
 ****************************************************************************/
 
@@ -47,8 +47,8 @@
 #define O6_MI 758 // 1318.510[hz]
 #define O6_FA 716 // 1396.913[hz]
 #define O6_SO 638 // 1567.982[hz]
-#define O6_LA 284 // 1760.000[hz]
-#define O6_TI 253 // 1975.533[hz]
+#define O6_LA 568 // 1760.000[hz]
+#define O6_TI 506 // 1975.533[hz]
 
 
 static void show_usage_hexagon(FAR const char *program)
@@ -58,6 +58,8 @@ static void show_usage_hexagon(FAR const char *program)
 	printf("| %s led     | gpio[#]  | [#]TURNS |   |\n", program);
 	printf("| %s switch  | gpio[#]  | [#]TURNS |   |\n", program);
 	printf("| %s light   |  adc[#]  | [#]TURNS |   |\n", program);
+	printf("| %s ir      |  adc[#]  | [#]TURNS |   |\n", program);
+	printf("| %s temp    |  adc[#]  | [#]TURNS |   |\n", program);
 	printf("| %s buzzer  |  pwm[#]  | [#]TURNS |   |\n", program);
 	printf("|-------------------------------------------|\n");
 	printf("| GPIO[0] (D2, D4),     GPIO[1](D7, D8)     |\n");
@@ -77,7 +79,10 @@ int hexagon_main(int argc, FAR char *argv[])
 	if ( (argc==4) && (strcmp(argv[1],"led")==0) ) {hexagon_led_main(argc,argv);}
 	else if ( (argc==4) && (strcmp(argv[1],"switch")==0) ) {hexagon_switch_main(argc,argv);}
 	else if ( (argc==4) && (strcmp(argv[1],"light")==0) ) {hexagon_light_main(argc,argv);}
+	else if ( (argc==4) && (strcmp(argv[1],"ir")==0) ) {hexagon_ir_main(argc,argv);}
+	else if ( (argc==4) && (strcmp(argv[1],"temp")==0) ) {hexagon_temp_main(argc,argv);}
 	else if ( (argc==4) && (strcmp(argv[1],"buzzer")==0) ) {hexagon_buzzer_main(argc,argv);}
+
 	else show_usage_hexagon(argv[0]);
 
 	return 0;
@@ -188,6 +193,65 @@ int hexagon_light_main(int argc, FAR char *argv[])
 	return 0;
 }
 
+int hexagon_ir_main(int argc, FAR char *argv[])
+{
+	int32_t val;
+	int i;
+	int pin_ir;
+	int max = 0;
+	char *adc0 = "0";
+	char *adc1 = "1";
+
+	max = atoi(argv[3]);
+
+	if (strcmp(argv[2], adc0)==0 ) { pin_ir = A0; }
+	else if (strcmp(argv[2], adc1)==0 ) { pin_ir = A2; }
+	else { show_usage_hexagon(argv[0]); }
+
+	printf("*********** HEXAGON IR SENSOR BOARD TEST START ***********\n");
+
+	for(i=0 ; i<max ; i++)
+	{
+		val = read_adc(pin_ir);
+		printf("|--- (%2d/%d) IR Sensor Value(ADC %d):%d\n", i+1, max, pin_ir, val);
+		up_mdelay(1000);
+	}
+
+	printf("************ HEXAGON IR SENSOR BOARD TEST END ************\n");
+
+	return 0;
+}
+
+int hexagon_temp_main(int argc, FAR char *argv[])
+{
+	int32_t val;
+	int i;
+	int pin_temp;
+	int max = 0;
+	char *adc0 = "0";
+	char *adc1 = "1";
+
+	max = atoi(argv[3]);
+
+	if (strcmp(argv[2], adc0)==0 ) { pin_temp = A0; }
+	else if (strcmp(argv[2], adc1)==0 ) { pin_temp = A2; }
+	else { show_usage_hexagon(argv[0]); }
+
+	printf("*********** HEXAGON TEMPERATURE SENSOR BOARD TEST START ***********\n");
+
+	for(i=0 ; i<max ; i++)
+	{
+		val = read_adc(pin_temp);
+		printf("|--- (%2d/%d) Temperature Sensor Value(ADC %d):%d\n", i+1, max, pin_temp, val);
+		up_mdelay(1000);
+	}
+
+	printf("************ HEXAGON TEMPERATURE SENSOR BOARD TEST END ************\n");
+
+	return 0;
+}
+
+
 int hexagon_buzzer_main(int argc, FAR char *argv[])
 {
 	int i;
@@ -243,3 +307,4 @@ int hexagon_buzzer_main(int argc, FAR char *argv[])
 
 	return 0;
 }
+
